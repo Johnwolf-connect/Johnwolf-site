@@ -65,6 +65,7 @@ button { font:inherit; }
 .theater-poster img { width:100%; height:100%; object-fit:cover; }
 .watch-project { position:absolute; left:12px; right:12px; bottom:12px; height:31px; display:flex; align-items:center; justify-content:center; gap:7px; border:1px solid rgba(255,255,255,.72); border-radius:4px; background:rgba(3,7,15,.75); color:#fff; cursor:pointer; font-weight:800; font-size:12px; }
 .watch-project:hover { background:#0878ff; }
+.theater-key-source { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
 .theater-character { position:absolute; z-index:5; left:0; bottom:0; width:100%; height:auto; pointer-events:none; }
 .theater-arrow { position:absolute; z-index:8; top:49%; width:48px; height:48px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.28); border-radius:50%; background:rgba(2,7,17,.75); color:#fff; cursor:pointer; }
 .theater-arrow:hover { background:#0878ff; }

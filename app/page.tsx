@@ -132,7 +132,7 @@ export default function Home() {
         <button className="theater-arrow theater-arrow-right" onClick={() => moveTheater(1)} aria-label="Next projects"><ChevronRight /></button>
         <div className="theater-track" ref={theaterTrack}>
           {theaterProjects.map((project) => (
-            <article className="theater-card" key={project.title} style={{ "--accent": project.color } as React.CSSProperties}>
+            <article className="theater-card" key={project.title}>
               <a className="theater-poster" href={project.href} target="_blank" rel="noreferrer" aria-label={`Open ${project.title} project`}>
                 <img src={project.image} alt={`${project.title} project cover`} />
               </a>
@@ -144,8 +144,8 @@ export default function Home() {
         <video
           ref={theaterVideo}
           className="theater-character"
-          src="/theater/john-theater-story.webm"
-          preload="auto"
+          src="/theater/john-theater-sequence-v2.webm"
+          preload="metadata"
           muted
           playsInline
           aria-label="Animated theater audience arriving and taking their seats"

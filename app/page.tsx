@@ -26,6 +26,7 @@ export default function Home() {
   const [theaterFilter, setTheaterFilter] = useState("All");
   const [theaterSearch, setTheaterSearch] = useState("");
   const [activeGuideline, setActiveGuideline] = useState<"chick" | "riches">("chick");
+  const [activeGuidelinePage, setActiveGuidelinePage] = useState(1);
   const [guidelineTransition, setGuidelineTransition] = useState(false);
   const [siteNavVisible, setSiteNavVisible] = useState(true);
   const heroSection = useRef<HTMLElement>(null);
@@ -166,31 +167,35 @@ export default function Home() {
         <div className="guideline-viewer">
           <div className="guideline-stage">
             <iframe
-              key={activeGuideline}
+              key={`${activeGuideline}-${activeGuidelinePage}`}
               src={activeGuideline === "chick"
-                ? "/guidelines/chick-muy-caliente-brand-guidelines.pdf#page=1&toolbar=0&navpanes=0&scrollbar=0&view=Fit"
-                : "/guidelines/riches-cosmetics-brand-guidelines.pdf#page=1&toolbar=0&navpanes=0&scrollbar=0&view=Fit"}
+                ? `/guidelines/chick-muy-caliente-brand-guidelines.pdf#page=${activeGuidelinePage}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`
+                : `/guidelines/riches-cosmetics-brand-guidelines.pdf#page=${activeGuidelinePage}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`}
               title={activeGuideline === "chick" ? "Chick Muy Caliente brand guidelines" : "Riches Cosmetics brand guidelines"}
             />
             <div className={`guideline-wipe ${guidelineTransition ? "is-animating" : ""}`} aria-hidden="true">
-            <svg viewBox="0 0 1600 900" preserveAspectRatio="none">
-              <path pathLength="1" d="M-220 820 C120 20 390 970 720 80 C980 -560 1260 1150 1810 80" />
-            </svg>
+              <svg viewBox="0 0 1000 700" preserveAspectRatio="none">
+                <path d="M-80 610 C 140 40, 390 40, 540 360 S 850 760, 1080 80" />
+              </svg>
             </div>
           </div>
           <aside className="guideline-thumbnails" aria-label="Brand guideline page thumbnails">
-            {[1,2,3,4,5,6,7].map((page) => (
-              <a key={page} href={activeGuideline === "chick"
-                ? `/guidelines/chick-muy-caliente-brand-guidelines.pdf#page=${page}&toolbar=0&navpanes=0&view=Fit`
-                : `/guidelines/riches-cosmetics-brand-guidelines.pdf#page=${page}&toolbar=0&navpanes=0&view=Fit`} target="guideline-pages">
+            {Array.from({ length: activeGuideline === "chick" ? 17 : 20 }, (_, i) => i + 1).map((page) => (
+              <button
+                type="button"
+                key={page}
+                className={page === activeGuidelinePage ? "active" : ""}
+                onClick={() => setActiveGuidelinePage(page)}
+                aria-label={`Show guideline page ${page}`}
+              >
                 <iframe
                   src={activeGuideline === "chick"
                     ? `/guidelines/chick-muy-caliente-brand-guidelines.pdf#page=${page}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`
                     : `/guidelines/riches-cosmetics-brand-guidelines.pdf#page=${page}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`}
-                  title={`Guideline page ${page}`}
+                  title={`Guideline thumbnail page ${page}`}
                   tabIndex={-1}
                 />
-              </a>
+              </button>
             ))}
           </aside>
         </div>

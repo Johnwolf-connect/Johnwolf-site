@@ -8,7 +8,7 @@ const projects = [
   { code: "3LK", title: "3 Lowkee", type: "Animated", image: "/portfolio/3lowkee-full.jpg", color: "#ff4fd8", href: "https://lowkee-live.johnwolfvision14168.chatgpt.site" },
   { code: "FRD", title: "Froid", type: "Animated", image: "https://raw.githubusercontent.com/Johnwolf-connect/john-wolf-portfolio-test/6f3a67d4a1bea9145f211c0cf630799855f0b582/public/assets/websites/froid-cover.png", color: "#7be7ff", href: "https://froid-clothing.johnwolfvision14168.chatgpt.site" },
   { code: "SHT", title: "ShayTax", type: "Service", image: "https://raw.githubusercontent.com/Johnwolf-connect/john-wolf-portfolio-test/6f3a67d4a1bea9145f211c0cf630799855f0b582/public/assets/websites/shaytax-cover.png", color: "#ffb500", href: "https://shaytaxdemo.vercel.app" },
-  { code: "RTB", title: "Rooted Beauty", type: "Service", image: "https://at.adobe.com/sJRKI9bdwfI06nTt", color: "#ff4f94", href: "https://rooted-beauty-hair-salon.vercel.app" },
+  { code: "RTB", title: "Rooted Beauty", type: "Service", image: "/portfolio/rooted-beauty.png", color: "#ff4f94", href: "https://rooted-beauty-hair-salon.vercel.app" },
   { code: "GSC", title: "GreenScape", type: "Service", image: "/portfolio/greenscape.png", color: "#9ecb53", href: "https://greenscape-gilt.vercel.app" },
   { code: "NFT", title: "Nightfall", type: "Playable", image: "/portfolio/nightfall-full.jpg", color: "#7b1827", href: "https://nightfall-unlocked-vercel-drop.vercel.app" },
 ];

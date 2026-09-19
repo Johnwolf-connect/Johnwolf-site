@@ -29,7 +29,9 @@ export default function Home() {
   const [guidelineTransition, setGuidelineTransition] = useState(false);
   const [siteNavVisible, setSiteNavVisible] = useState(true);
   const heroSection = useRef<HTMLElement>(null);
+  const theaterSection = useRef<HTMLElement>(null);
   const theaterTrack = useRef<HTMLDivElement>(null);
+  const theaterVideo = useRef<HTMLVideoElement>(null);
   const theaterProjects = useMemo(() => projects.filter((project) => {
     const matchesFilter = theaterFilter === "All" || project.type === theaterFilter;
     const matchesSearch = project.title.toLowerCase().includes(theaterSearch.toLowerCase());
@@ -66,6 +68,24 @@ export default function Home() {
     return () => window.removeEventListener("pointermove", move);
   }, []);
 
+  useEffect(() => {
+    const section = theaterSection.current;
+    const video = theaterVideo.current;
+    if (!section || !video) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        video.currentTime = 0;
+        void video.play().catch(() => undefined);
+      } else {
+        video.pause();
+      }
+    }, { threshold: 0.35 });
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <main>
       <div className="cursor-orb" style={{ transform: `translate3d(${cursor.x}px, ${cursor.y}px, 0)` }} />
@@ -96,7 +116,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="work-section" id="work">
+      <section className="work-section" id="work" ref={theaterSection}>
         <img className="theater-curtains" src="/theater/curtains.webp" alt="" />
         <div className="theater-nav">
           <strong>Website Theater</strong>
@@ -120,6 +140,15 @@ export default function Home() {
           ))}
           {theaterProjects.length === 0 && <p className="theater-empty">No projects match this selection.</p>}
         </div>
+        <video
+          ref={theaterVideo}
+          className="theater-character"
+          src="/theater/section-2-theater-keyed.webm"
+          preload="metadata"
+          muted
+          playsInline
+          aria-label="Animated theater audience sequence"
+        />
       </section>
 
       <section className="guidelines-section" id="guidelines">

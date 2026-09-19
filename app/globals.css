@@ -61,8 +61,8 @@ button { font:inherit; }
 .theater-card { flex:0 0 clamp(155px,15vw,235px); aspect-ratio:.67; position:relative; display:flex; flex-direction:column; min-height:0; padding:12px 12px 50px; scroll-snap-align:center; background:rgba(5,14,32,.72); border:1px solid rgba(117,205,255,.64); border-radius:18px; box-shadow:0 0 7px #0878ff,0 0 26px rgba(0,119,255,.75),inset 0 0 18px rgba(0,119,255,.3); transition:transform .25s,box-shadow .25s; }
 .theater-card::before { content:""; position:absolute; z-index:-1; inset:-9px; background:url('/theater/glow-frame.png') center/100% 100% no-repeat; opacity:.56; }
 .theater-card:hover { transform:translateY(-10px) scale(1.025); box-shadow:0 0 10px #24a2ff,0 0 38px rgba(0,119,255,.95),inset 0 0 24px rgba(0,119,255,.45); }
-.theater-poster { display:block; flex:1 1 auto; min-height:0; width:100%; height:auto; overflow:hidden; border-radius:8px; background:var(--accent); }
-.theater-poster img { display:block; width:100%; height:100%; object-fit:contain; background:var(--accent); }
+.theater-poster { display:block; flex:1 1 auto; min-height:0; width:100%; overflow:hidden; border-radius:8px; background:#02060f; }
+.theater-poster img { display:block; width:100%; height:100%; object-fit:cover; object-position:center; background:#02060f; }
 .watch-project { position:absolute; left:12px; right:12px; bottom:12px; height:31px; display:flex; align-items:center; justify-content:center; gap:7px; border:1px solid rgba(255,255,255,.72); border-radius:4px; background:rgba(3,7,15,.75); color:#fff; cursor:pointer; font-weight:800; font-size:12px; }
 .watch-project:hover { background:#0878ff; }
 .theater-character { position:absolute; z-index:5; left:0; bottom:0; width:100%; height:auto; pointer-events:none; }

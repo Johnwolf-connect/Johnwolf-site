@@ -31,7 +31,6 @@ export default function Home() {
   const heroSection = useRef<HTMLElement>(null);
   const theaterTrack = useRef<HTMLDivElement>(null);
   const theaterVideo = useRef<HTMLVideoElement>(null);
-  const theaterCanvas = useRef<HTMLCanvasElement>(null);
   const theaterProjects = useMemo(() => projects.filter((project) => {
     const matchesFilter = theaterFilter === "All" || project.type === theaterFilter;
     const matchesSearch = project.title.toLowerCase().includes(theaterSearch.toLowerCase());
@@ -64,50 +63,10 @@ export default function Home() {
 
   useEffect(() => {
     const video = theaterVideo.current;
-    const canvas = theaterCanvas.current;
-    const context = canvas?.getContext("2d", { willReadFrequently: true });
     if (!video) return;
 
     video.pause();
     video.currentTime = 0;
-
-    let active = true;
-    let frameRequest = 0;
-    const drawKeyedFrame = () => {
-      if (!active || !context || !canvas || video.readyState < 2) return;
-
-      const width = 960;
-      const height = 540;
-      if (canvas.width !== width || canvas.height !== height) {
-        canvas.width = width;
-        canvas.height = height;
-      }
-
-      context.drawImage(video, 0, 0, width, height);
-      const frame = context.getImageData(0, 0, width, height);
-      const pixels = frame.data;
-
-      for (let index = 0; index < pixels.length; index += 4) {
-        const red = pixels[index];
-        const green = pixels[index + 1];
-        const blue = pixels[index + 2];
-        const greenDominance = green - Math.max(red, blue);
-
-        if (greenDominance > 42 && green > 90) {
-          pixels[index + 3] = 0;
-        } else if (greenDominance > 18 && green > 70) {
-          pixels[index + 3] = Math.max(0, pixels[index + 3] - greenDominance * 4);
-        }
-      }
-
-      context.putImageData(frame, 0, 0);
-    };
-
-    const scheduleFrame = () => {
-      if (!active) return;
-      drawKeyedFrame();
-      frameRequest = window.requestAnimationFrame(scheduleFrame);
-    };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -119,12 +78,7 @@ export default function Home() {
     );
 
     observer.observe(video);
-    scheduleFrame();
-    return () => {
-      active = false;
-      window.cancelAnimationFrame(frameRequest);
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -189,15 +143,14 @@ export default function Home() {
         </div>
         <video
           ref={theaterVideo}
-          className="theater-key-source"
-          src="/theater/Section-2-Master-Green-Screen.mp4"
+          className="theater-character"
+          src="/theater/john-theater-story.webm"
           preload="auto"
           loop
           muted
           playsInline
           aria-label="Animated theater audience arriving and taking their seats"
         />
-        <canvas ref={theaterCanvas} className="theater-character" aria-hidden="true" />
       </section>
 
       <section className="guidelines-section" id="guidelines">

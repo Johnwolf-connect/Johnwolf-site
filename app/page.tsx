@@ -192,6 +192,7 @@ export default function Home() {
           className="theater-key-source"
           src="/theater/Section-2-Master-Green-Screen.mp4"
           preload="auto"
+          loop
           muted
           playsInline
           aria-label="Animated theater audience arriving and taking their seats"

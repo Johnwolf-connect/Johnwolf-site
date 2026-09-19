@@ -30,7 +30,6 @@ export default function Home() {
   const [siteNavVisible, setSiteNavVisible] = useState(true);
   const heroSection = useRef<HTMLElement>(null);
   const theaterTrack = useRef<HTMLDivElement>(null);
-  const theaterVideo = useRef<HTMLVideoElement>(null);
   const theaterProjects = useMemo(() => projects.filter((project) => {
     const matchesFilter = theaterFilter === "All" || project.type === theaterFilter;
     const matchesSearch = project.title.toLowerCase().includes(theaterSearch.toLowerCase());
@@ -59,26 +58,6 @@ export default function Home() {
       window.removeEventListener("scroll", updateSiteNav);
       window.removeEventListener("resize", updateSiteNav);
     };
-  }, []);
-
-  useEffect(() => {
-    const video = theaterVideo.current;
-    if (!video) return;
-
-    video.pause();
-    video.currentTime = 0;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        void video.play().catch(() => undefined);
-        observer.disconnect();
-      },
-      { threshold: 0.35 },
-    );
-
-    observer.observe(video);
-    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -141,15 +120,6 @@ export default function Home() {
           ))}
           {theaterProjects.length === 0 && <p className="theater-empty">No projects match this selection.</p>}
         </div>
-        <video
-          ref={theaterVideo}
-          className="theater-character"
-          src="/theater/john-theater-story.webm"
-          preload="auto"
-          muted
-          playsInline
-          aria-label="Animated theater audience arriving and taking their seats"
-        />
       </section>
 
       <section className="guidelines-section" id="guidelines">

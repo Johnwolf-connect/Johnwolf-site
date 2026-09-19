@@ -58,14 +58,13 @@ button { font:inherit; }
 .theater-instruction { position:absolute; z-index:4; top:calc(94px + 1.2vh); left:50%; margin:0; transform:translateX(-50%); color:#fff; font-size:clamp(14px,1.15vw,18px); font-weight:800; letter-spacing:.04em; text-transform:uppercase; white-space:nowrap; text-shadow:0 2px 14px rgba(0,0,0,.75); }
 .theater-track { position:absolute; z-index:4; top:24%; left:6.25%; right:5%; bottom:9%; display:flex; align-items:center; gap:clamp(14px,1.5vw,28px); padding:1.5vw 2vw 8vh 9.75vw; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; transform:translateY(-14vh); }
 .theater-track::-webkit-scrollbar { display:none; }
-.theater-card { flex:0 0 clamp(155px,15vw,235px); aspect-ratio:.67; position:relative; padding:12px 12px 50px; scroll-snap-align:center; background:rgba(5,14,32,.72); border:1px solid rgba(117,205,255,.64); border-radius:18px; box-shadow:0 0 7px #0878ff,0 0 26px rgba(0,119,255,.75),inset 0 0 18px rgba(0,119,255,.3); transition:transform .25s,box-shadow .25s; }
+.theater-card { flex:0 0 clamp(155px,15vw,235px); aspect-ratio:.67; position:relative; display:flex; flex-direction:column; min-height:0; padding:12px 12px 50px; scroll-snap-align:center; background:rgba(5,14,32,.72); border:1px solid rgba(117,205,255,.64); border-radius:18px; box-shadow:0 0 7px #0878ff,0 0 26px rgba(0,119,255,.75),inset 0 0 18px rgba(0,119,255,.3); transition:transform .25s,box-shadow .25s; }
 .theater-card::before { content:""; position:absolute; z-index:-1; inset:-9px; background:url('/theater/glow-frame.png') center/100% 100% no-repeat; opacity:.56; }
 .theater-card:hover { transform:translateY(-10px) scale(1.025); box-shadow:0 0 10px #24a2ff,0 0 38px rgba(0,119,255,.95),inset 0 0 24px rgba(0,119,255,.45); }
-.theater-poster { display:block; width:100%; height:100%; overflow:hidden; border-radius:8px; background:var(--accent); }
-.theater-poster img { width:100%; height:100%; object-fit:cover; }
+.theater-poster { display:block; flex:1 1 auto; min-height:0; width:100%; height:auto; overflow:hidden; border-radius:8px; background:var(--accent); }
+.theater-poster img { display:block; width:100%; height:100%; object-fit:contain; background:var(--accent); }
 .watch-project { position:absolute; left:12px; right:12px; bottom:12px; height:31px; display:flex; align-items:center; justify-content:center; gap:7px; border:1px solid rgba(255,255,255,.72); border-radius:4px; background:rgba(3,7,15,.75); color:#fff; cursor:pointer; font-weight:800; font-size:12px; }
 .watch-project:hover { background:#0878ff; }
-.theater-key-source { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
 .theater-character { position:absolute; z-index:5; left:0; bottom:0; width:100%; height:auto; pointer-events:none; }
 .theater-arrow { position:absolute; z-index:8; top:49%; width:48px; height:48px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.28); border-radius:50%; background:rgba(2,7,17,.75); color:#fff; cursor:pointer; }
 .theater-arrow:hover { background:#0878ff; }

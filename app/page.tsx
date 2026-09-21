@@ -225,7 +225,7 @@ export default function Home() {
             <PdfPageCanvas
               src={activeGuideline === "chick"
                 ? "/guidelines/chick-muy-caliente-brand-guidelines.pdf"
-                : "/guidelines/riches-cosmetics-brand-guidelines.pdf"}
+                : "https://at.adobe.com/7SFZ35xhxrEH9wZG"}
               page={activeGuidelinePage}
               className="guideline-main-canvas"
             />
@@ -247,7 +247,7 @@ export default function Home() {
                 <PdfPageCanvas
                   src={activeGuideline === "chick"
                     ? "/guidelines/chick-muy-caliente-brand-guidelines.pdf"
-                    : "/guidelines/riches-cosmetics-brand-guidelines.pdf"}
+                    : "https://at.adobe.com/7SFZ35xhxrEH9wZG"}
                   page={page}
                   className="guideline-thumb-canvas"
                 />

@@ -102,7 +102,6 @@ export default function Home() {
       </header>
       <div className={siteNavVisible ? "expertise-bar" : "expertise-bar is-hidden"} aria-label="Design specialties">
         <span>Independent Graphic Designer</span>
-        <span>Brand Guidelines</span>
         <span>Logo Creations</span>
         <span>Web Development</span>
       </div>
@@ -155,7 +154,7 @@ export default function Home() {
       <section className="guidelines-section" id="guidelines">
         <div className="guidelines-heading">
           <span>Brand Guidelines</span>
-          <h2>SELECT A BRAND WORLD</h2>
+          <h2>Brand Guideline Projects</h2>
         </div>
 
         <div className="guideline-selector" aria-label="Select a branding guideline">

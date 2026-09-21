@@ -22,7 +22,6 @@ const services = [
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const cursorOrb = useRef<HTMLDivElement>(null);
   const [theaterFilter, setTheaterFilter] = useState("All");
   const [theaterSearch, setTheaterSearch] = useState("");
   const [activeGuideline, setActiveGuideline] = useState<"chick" | "riches">("chick");
@@ -64,14 +63,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const move = (event: PointerEvent) => {
-      if (cursorOrb.current) cursorOrb.current.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
-    };
-    window.addEventListener("pointermove", move);
-    return () => window.removeEventListener("pointermove", move);
-  }, []);
-
-  useEffect(() => {
     const section = theaterSection.current;
     const video = theaterVideo.current;
     if (!section || !video) return;
@@ -90,7 +81,6 @@ export default function Home() {
 
   return (
     <main>
-      <div className="cursor-orb" ref={cursorOrb} />
       <header className={siteNavVisible ? "site-header" : "site-header is-hidden"}>
         <a className="monogram" href="#top" aria-label="John Wolf home"><span>J</span><span>W</span></a>
         <nav className={menuOpen ? "nav open" : "nav"} aria-label="Main navigation">

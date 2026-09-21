@@ -6,10 +6,10 @@ import AnimatedPortrait from "@/components/AnimatedPortrait";
 
 const projects = [
   { code: "3LK", title: "3 Lowkee", type: "Animated", image: "/portfolio/3lowkee-full.jpg", color: "#ff4fd8", href: "https://lowkee-live.johnwolfvision14168.chatgpt.site" },
-  { code: "FRD", title: "Froid", type: "Animated", image: "/portfolio/froid.png", color: "#7be7ff", href: "https://froid-clothing.johnwolfvision14168.chatgpt.site" },
-  { code: "SHT", title: "ShayTax", type: "Service", image: "/portfolio/shaytax.png", color: "#ffb500", href: "https://shaytaxdemo.vercel.app" },
-  { code: "RTB", title: "Rooted Beauty", type: "Service", image: "/portfolio/rooted-beauty.png", color: "#ff4f94", href: "https://rooted-beauty-hair-salon.vercel.app" },
-  { code: "GSC", title: "GreenScape", type: "Service", image: "/portfolio/greenscape.png", color: "#9ecb53", href: "https://greenscape-gilt.vercel.app" },
+  { code: "FRD", title: "Froid", type: "Animated", image: "/portfolio/froid-fixed.jpg", color: "#7be7ff", href: "https://froid-clothing.johnwolfvision14168.chatgpt.site" },
+  { code: "SHT", title: "ShayTax", type: "Service", image: "/portfolio/shaytax-fixed.jpg", color: "#ffb500", href: "https://shaytaxdemo.vercel.app" },
+  { code: "RTB", title: "Rooted Beauty", type: "Service", image: "/portfolio/rooted-fixed.jpg", color: "#ff4f94", href: "https://rooted-beauty-hair-salon.vercel.app" },
+  { code: "GSC", title: "GreenScape", type: "Service", image: "/portfolio/greenscape-fixed.jpg", color: "#9ecb53", href: "https://greenscape-gilt.vercel.app" },
   { code: "NFT", title: "Nightfall", type: "Playable", image: "/portfolio/nightfall-full.jpg", color: "#7b1827", href: "https://nightfall-unlocked-vercel-drop.vercel.app" },
 ];
 

@@ -4,6 +4,63 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, ChevronLeft, ChevronRight, Menu, Play, Search, X } from "lucide-react";
 import AnimatedPortrait from "@/components/AnimatedPortrait";
 
+function PdfPageCanvas({ src, page, className = "" }: { src: string; page: number; className?: string }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    let task: any;
+
+    const renderPage = async () => {
+      if (!(window as any).pdfjsLib) {
+        await new Promise<void>((resolve, reject) => {
+          const existing = document.querySelector('script[data-pdfjs="true"]') as HTMLScriptElement | null;
+          if (existing) {
+            if ((window as any).pdfjsLib) return resolve();
+            existing.addEventListener("load", () => resolve(), { once: true });
+            existing.addEventListener("error", () => reject(), { once: true });
+            return;
+          }
+          const script = document.createElement("script");
+          script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+          script.dataset.pdfjs = "true";
+          script.onload = () => resolve();
+          script.onerror = () => reject();
+          document.head.appendChild(script);
+        });
+      }
+      if (cancelled) return;
+      const pdfjs = (window as any).pdfjsLib;
+      pdfjs.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+      task = pdfjs.getDocument(src);
+      const pdf = await task.promise;
+      const pdfPage = await pdf.getPage(page);
+      if (cancelled || !canvasRef.current) return;
+      const base = pdfPage.getViewport({ scale: 1 });
+      const parentWidth = canvasRef.current.parentElement?.clientWidth || 900;
+      const scale = Math.max(0.25, Math.min(2, parentWidth / base.width));
+      const viewport = pdfPage.getViewport({ scale });
+      const canvas = canvasRef.current;
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(viewport.width * ratio);
+      canvas.height = Math.floor(viewport.height * ratio);
+      canvas.style.width = `${viewport.width}px`;
+      canvas.style.height = `${viewport.height}px`;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      await pdfPage.render({ canvasContext: ctx, viewport, transform: ratio !== 1 ? [ratio, 0, 0, ratio, 0, 0] : undefined }).promise;
+    };
+
+    renderPage().catch(() => {});
+    return () => {
+      cancelled = true;
+      try { task?.destroy?.(); } catch {}
+    };
+  }, [src, page]);
+
+  return <canvas ref={canvasRef} className={className} aria-label={`Guideline page ${page}`} />;
+}
+
 const projects = [
   { code: "3LK", title: "3 Lowkee", type: "Animated", image: "/portfolio/3lowkee-full.jpg", color: "#ff4fd8", href: "https://lowkee-live.johnwolfvision14168.chatgpt.site" },
   { code: "FRD", title: "Froid", type: "Animated", image: "https://raw.githubusercontent.com/Johnwolf-connect/john-wolf-portfolio-test/6f3a67d4a1bea9145f211c0cf630799855f0b582/public/assets/websites/froid-cover.png", color: "#7be7ff", href: "https://froid-clothing.johnwolfvision14168.chatgpt.site" },
@@ -165,12 +222,12 @@ export default function Home() {
 
         <div className="guideline-viewer">
           <div className="guideline-stage">
-            <iframe
-              key={`${activeGuideline}-${activeGuidelinePage}`}
+            <PdfPageCanvas
               src={activeGuideline === "chick"
-                ? `/guidelines/chick-muy-caliente-brand-guidelines.pdf#page=${activeGuidelinePage}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`
-                : `/guidelines/riches-cosmetics-brand-guidelines.pdf#page=${activeGuidelinePage}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`}
-              title={activeGuideline === "chick" ? "Chick Muy Caliente brand guidelines" : "Riches Cosmetics brand guidelines"}
+                ? "/guidelines/chick-muy-caliente-brand-guidelines.pdf"
+                : "/guidelines/riches-cosmetics-brand-guidelines.pdf"}
+              page={activeGuidelinePage}
+              className="guideline-main-canvas"
             />
             <div className={`guideline-wipe ${guidelineTransition ? "is-animating" : ""}`} aria-hidden="true">
               <svg viewBox="0 0 1000 700" preserveAspectRatio="none">
@@ -187,12 +244,12 @@ export default function Home() {
                 onClick={() => setActiveGuidelinePage(page)}
                 aria-label={`Show guideline page ${page}`}
               >
-                <iframe
+                <PdfPageCanvas
                   src={activeGuideline === "chick"
-                    ? `/guidelines/chick-muy-caliente-brand-guidelines.pdf#page=${page}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`
-                    : `/guidelines/riches-cosmetics-brand-guidelines.pdf#page=${page}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`}
-                  title={`Guideline thumbnail page ${page}`}
-                  tabIndex={-1}
+                    ? "/guidelines/chick-muy-caliente-brand-guidelines.pdf"
+                    : "/guidelines/riches-cosmetics-brand-guidelines.pdf"}
+                  page={page}
+                  className="guideline-thumb-canvas"
                 />
               </button>
             ))}

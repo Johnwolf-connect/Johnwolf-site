@@ -4,69 +4,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, ChevronLeft, ChevronRight, Menu, Play, Search, X } from "lucide-react";
 import AnimatedPortrait from "@/components/AnimatedPortrait";
 
-function PdfPageCanvas({ src, page, className = "" }: { src: string; page: number; className?: string }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    let task: any;
-
-    const renderPage = async () => {
-      if (!(window as any).pdfjsLib) {
-        await new Promise<void>((resolve, reject) => {
-          const existing = document.querySelector('script[data-pdfjs="true"]') as HTMLScriptElement | null;
-          if (existing) {
-            if ((window as any).pdfjsLib) return resolve();
-            existing.addEventListener("load", () => resolve(), { once: true });
-            existing.addEventListener("error", () => reject(), { once: true });
-            return;
-          }
-          const script = document.createElement("script");
-          script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
-          script.dataset.pdfjs = "true";
-          script.onload = () => resolve();
-          script.onerror = () => reject();
-          document.head.appendChild(script);
-        });
-      }
-      if (cancelled) return;
-      const pdfjs = (window as any).pdfjsLib;
-      pdfjs.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-      task = pdfjs.getDocument(src);
-      const pdf = await task.promise;
-      const pdfPage = await pdf.getPage(page);
-      if (cancelled || !canvasRef.current) return;
-      const base = pdfPage.getViewport({ scale: 1 });
-      const parentWidth = canvasRef.current.parentElement?.clientWidth || 900;
-      const scale = Math.max(0.25, Math.min(2, parentWidth / base.width));
-      const viewport = pdfPage.getViewport({ scale });
-      const canvas = canvasRef.current;
-      const ratio = window.devicePixelRatio || 1;
-      canvas.width = Math.floor(viewport.width * ratio);
-      canvas.height = Math.floor(viewport.height * ratio);
-      canvas.style.width = `${viewport.width}px`;
-      canvas.style.height = `${viewport.height}px`;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-      await pdfPage.render({ canvasContext: ctx, viewport, transform: ratio !== 1 ? [ratio, 0, 0, ratio, 0, 0] : undefined }).promise;
-    };
-
-    renderPage().catch(() => {});
-    return () => {
-      cancelled = true;
-      try { task?.destroy?.(); } catch {}
-    };
-  }, [src, page]);
-
-  return <canvas ref={canvasRef} className={className} aria-label={`Guideline page ${page}`} />;
-}
-
 const projects = [
   { code: "3LK", title: "3 Lowkee", type: "Animated", image: "/portfolio/3lowkee-full.jpg", color: "#ff4fd8", href: "https://lowkee-live.johnwolfvision14168.chatgpt.site" },
-  { code: "FRD", title: "Froid", type: "Animated", image: "https://raw.githubusercontent.com/Johnwolf-connect/john-wolf-portfolio-test/6f3a67d4a1bea9145f211c0cf630799855f0b582/public/assets/websites/froid-cover.png", color: "#7be7ff", href: "https://froid-clothing.johnwolfvision14168.chatgpt.site" },
-  { code: "SHT", title: "ShayTax", type: "Service", image: "https://raw.githubusercontent.com/Johnwolf-connect/john-wolf-portfolio-test/6f3a67d4a1bea9145f211c0cf630799855f0b582/public/assets/websites/shaytax-cover.png", color: "#ffb500", href: "https://shaytaxdemo.vercel.app" },
-  { code: "RTB", title: "Rooted Beauty", type: "Service", image: "https://at.adobe.com/jU08m8HSuBzhRyp7", color: "#ff4f94", href: "https://rooted-beauty-hair-salon.vercel.app" },
-  { code: "GSC", title: "GreenScape", type: "Service", image: "https://at.adobe.com/C5ergN4WMytWXnzh", color: "#9ecb53", href: "https://greenscape-gilt.vercel.app" },
+  { code: "FRD", title: "Froid", type: "Animated", image: "/portfolio/froid.png", color: "#7be7ff", href: "https://froid-clothing.johnwolfvision14168.chatgpt.site" },
+  { code: "SHT", title: "ShayTax", type: "Service", image: "/portfolio/shaytax.png", color: "#ffb500", href: "https://shaytaxdemo.vercel.app" },
+  { code: "RTB", title: "Rooted Beauty", type: "Service", image: "/portfolio/rooted-beauty.png", color: "#ff4f94", href: "https://rooted-beauty-hair-salon.vercel.app" },
+  { code: "GSC", title: "GreenScape", type: "Service", image: "/portfolio/greenscape.png", color: "#9ecb53", href: "https://greenscape-gilt.vercel.app" },
   { code: "NFT", title: "Nightfall", type: "Playable", image: "/portfolio/nightfall-full.jpg", color: "#7b1827", href: "https://nightfall-unlocked-vercel-drop.vercel.app" },
 ];
 
@@ -79,7 +22,7 @@ const services = [
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cursor, setCursor] = useState({ x: -100, y: -100 });
+  const cursorOrb = useRef<HTMLDivElement>(null);
   const [theaterFilter, setTheaterFilter] = useState("All");
   const [theaterSearch, setTheaterSearch] = useState("");
   const [activeGuideline, setActiveGuideline] = useState<"chick" | "riches">("chick");
@@ -121,7 +64,9 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const move = (event: MouseEvent) => setCursor({ x: event.clientX, y: event.clientY });
+    const move = (event: PointerEvent) => {
+      if (cursorOrb.current) cursorOrb.current.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
+    };
     window.addEventListener("pointermove", move);
     return () => window.removeEventListener("pointermove", move);
   }, []);
@@ -133,7 +78,6 @@ export default function Home() {
 
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        video.currentTime = 0;
         void video.play().catch(() => undefined);
       } else {
         video.pause();
@@ -146,7 +90,7 @@ export default function Home() {
 
   return (
     <main>
-      <div className="cursor-orb" style={{ transform: `translate3d(${cursor.x}px, ${cursor.y}px, 0)` }} />
+      <div className="cursor-orb" ref={cursorOrb} />
       <header className={siteNavVisible ? "site-header" : "site-header is-hidden"}>
         <a className="monogram" href="#top" aria-label="John Wolf home"><span>J</span><span>W</span></a>
         <nav className={menuOpen ? "nav open" : "nav"} aria-label="Main navigation">
@@ -190,7 +134,7 @@ export default function Home() {
           {theaterProjects.map((project) => (
             <article className="theater-card" key={project.title} style={{ "--accent": project.color } as React.CSSProperties}>
               <a className="theater-poster" href={project.href} target="_blank" rel="noreferrer" aria-label={`Open ${project.title} project`}>
-                <img src={project.image} alt={`${project.title} project cover`} />
+                <img src={project.image} alt={`${project.title} project cover`} loading="lazy" decoding="async" />
               </a>
               <a className="watch-project" href={project.href} target="_blank" rel="noreferrer" aria-label={`View ${project.title}`}><Play size={15} fill="currentColor" /><span>View Project</span></a>
             </article>
@@ -201,7 +145,7 @@ export default function Home() {
           ref={theaterVideo}
           className="theater-character"
           src="/theater/section-2-theater-keyed.webm"
-          preload="metadata"
+          preload="none"
           muted
           playsInline
           aria-label="Animated theater audience sequence"
@@ -222,13 +166,7 @@ export default function Home() {
 
         <div className="guideline-viewer">
           <div className="guideline-stage">
-            <PdfPageCanvas
-              src={activeGuideline === "chick"
-                ? "/guidelines/chick-muy-caliente-brand-guidelines.pdf"
-                : "https://at.adobe.com/7SFZ35xhxrEH9wZG"}
-              page={activeGuidelinePage}
-              className="guideline-main-canvas"
-            />
+            <iframe title={`${activeGuideline} guideline page ${activeGuidelinePage}`} src={`${activeGuideline === "chick" ? "/guidelines/chick-muy-caliente-brand-guidelines.pdf" : "/guidelines/riches-cosmetics-brand-guidelines.pdf"}#page=${activeGuidelinePage}&view=FitH&toolbar=0&navpanes=0`} loading="lazy" />
             <div className={`guideline-wipe ${guidelineTransition ? "is-animating" : ""}`} aria-hidden="true">
               <svg viewBox="0 0 1000 700" preserveAspectRatio="none">
                 <path d="M-80 610 C 140 40, 390 40, 540 360 S 850 760, 1080 80" />
@@ -244,13 +182,7 @@ export default function Home() {
                 onClick={() => setActiveGuidelinePage(page)}
                 aria-label={`Show guideline page ${page}`}
               >
-                <PdfPageCanvas
-                  src={activeGuideline === "chick"
-                    ? "/guidelines/chick-muy-caliente-brand-guidelines.pdf"
-                    : "https://at.adobe.com/7SFZ35xhxrEH9wZG"}
-                  page={page}
-                  className="guideline-thumb-canvas"
-                />
+                <span>{page}</span>
               </button>
             ))}
           </aside>

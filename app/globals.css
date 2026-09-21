@@ -127,3 +127,11 @@ button { font:inherit; }
 .guidelines-heading { display:block; margin:0 0 12px; text-align:center; }
 .guidelines-heading > span { display:none !important; }
 .guidelines-heading h2 { margin:0; text-align:center; text-transform:none; }
+
+/* Section 3: render PDF pages directly instead of browser PDF embeds */
+.guideline-stage { display:flex; align-items:center; justify-content:center; }
+.guideline-stage > iframe { display:none !important; }
+.guideline-main-canvas { display:block; max-width:100%; max-height:100%; width:auto !important; height:auto !important; margin:auto; }
+.guideline-thumbnails button { display:flex; align-items:center; justify-content:center; }
+.guideline-thumbnails button > iframe { display:none !important; }
+.guideline-thumb-canvas { display:block; max-width:100%; max-height:100%; width:auto !important; height:auto !important; margin:auto; pointer-events:none; }
